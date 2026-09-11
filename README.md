@@ -35,7 +35,3 @@ Multi-turn chat: the running conversation is kept in history, but only the lates
 - **Grounding across turns** -- previously, source snippets were stripped from conversation history after each turn, so "wait, which source said that?" two turns later had nothing to resolve against. Now a `SourceRegistry` assigns each article a stable number the first time it's retrieved and keeps a compact title/url reference in history for every turn, so later questions can still resolve "Source 4" to a real citation without re-sending full snippet text every time.
 - **Dedup** -- near-identical titles (common with syndicated entertainment news) are dropped before caching, so the same wire story reposted on three sites doesn't inflate a claim to "confirmed" by looking like independent corroboration. Same failure mode your citation-graph work needs to handle for real, just simpler here.
 - **Basic error handling** -- missing/empty/corrupt `articles.json`, unmatched celebrity name, failed Tavily calls, failed Anthropic calls. Still not production-grade, but it won't just stack-trace on the first hiccup.
-
-## Relevance to the SCOTUS project
-
-The retrieval function and the "tag each claim with a confidence label" pattern are the same shape as dissent-weighted retrieval: rank sources by a signal, feed the top-k into the LLM as numbered context, ask it to attribute claims back to sources. Swapping keyword overlap for citation-graph vindication scoring is the next step, not a different architecture.
