@@ -1,11 +1,3 @@
-"""
-Step 1: Pre-fetch articles for a fixed list of celebrities and cache them
-to articles.json. Run this ONCE (or whenever you want to refresh the data).
-The chat script never calls the search API live -- it just reads this file.
-
-Requires: TAVILY_API_KEY in your environment.
-Get a free key at https://tavily.com
-"""
 
 import os
 import re
@@ -29,11 +21,7 @@ def normalize(text: str) -> set[str]:
 
 
 def dedup_articles(articles: list[dict], threshold: float = 0.8) -> list[dict]:
-    """Drop near-duplicate articles (common with syndicated entertainment
-    news -- the same wire story reposted on 3 sites). Without this, the
-    same claim from the same underlying story gets counted as multiple
-    independent sources, which is exactly backwards for "confirmed" --
-    the same failure mode real citation dedup needs to solve."""
+    
     kept = []
     kept_tokens = []
     for art in articles:
@@ -54,8 +42,7 @@ def dedup_articles(articles: list[dict], threshold: float = 0.8) -> list[dict]:
 
 
 def fetch_for_celebrity(client: TavilyClient, name: str, n: int) -> list[dict]:
-    """Search for recent news about `name` and return a clean, deduped list
-    of {title, url, content, published_date} dicts."""
+    
     try:
         result = client.search(
             query=f"{name} news",
